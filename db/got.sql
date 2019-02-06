@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS `got_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `location` int(11) DEFAULT NULL,
-  `episode` smallint(6) DEFAULT NULL,
   `season` smallint(6) DEFAULT NULL,
+  `episode` smallint(6) DEFAULT NULL,
   `summary` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `location` (`location`)
