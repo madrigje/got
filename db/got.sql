@@ -23,11 +23,11 @@ CREATE TABLE IF NOT EXISTS `got_characters` (
   KEY `got_characters_ibfk_2` (`house_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_characters` (`id`, `fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
-(0, 'Jon', 'Snow', 1, 1, 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
-(34, 'Eddard', 'Stark', 1, 1, 'Ice', 'human', 'dead', NULL),
-(36, 'Hodor', NULL, NULL, NULL, NULL, 'human', 'dead', NULL),
-(39, 'Arya', 'Stark', 1, 1, 'Valyrian steel dagger', 'human', 'alive', NULL);
+INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
+('Jon', 'Snow', 1, 1, 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
+('Eddard', 'Stark', 1, 1, 'Ice', 'human', 'dead', NULL),
+('Hodor', NULL, NULL, NULL, NULL, 'human', 'dead', NULL),
+('Arya', 'Stark', 1, 1, 'Valyrian steel dagger', 'human', 'alive', NULL);
 
 CREATE TABLE IF NOT EXISTS `got_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
