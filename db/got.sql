@@ -23,22 +23,7 @@ CREATE TABLE IF NOT EXISTS `got_characters` (
   KEY `got_characters_ibfk_2` (`house_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
-('Jon', 'Snow', 
- (select id from got_house where name = 'Stark'), 
- (select id from got_locations where name = 'Winterfell'), 
- 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
- 
-('Eddard', 'Stark', 
- (select id from got_house where name = 'Stark'), 
- (select id from got_locations where name = 'Winterfell'), 
- 'Ice', 'human', 'dead', NULL),
- 
-('Hodor', NULL, NULL, NULL, NULL, 'human', 'dead', NULL),
 
-('Arya', 'Stark', (select id from got_house where name = 'Stark'), 
- (select id from got_locations where name = 'Winterfell'),
- 'Valyrian steel dagger', 'human', 'alive', NULL);
 
  
 CREATE TABLE IF NOT EXISTS `got_events` (
@@ -62,8 +47,7 @@ CREATE TABLE IF NOT EXISTS `got_events_characters` (
   KEY `character_id` (`character_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_events_characters` (`event_id`, `character_id`) VALUES
-((select id from `got_events` where name = 'Battle of the Bastards'),((select id from got_characters where fname = 'Jon'));
+
 
 CREATE TABLE IF NOT EXISTS `got_house` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -74,8 +58,7 @@ CREATE TABLE IF NOT EXISTS `got_house` (
   KEY `current_head` (`head`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_house` (`name`, `status`, `head`) VALUES
-('Stark', 'Great House', 0);
+
 
 CREATE TABLE IF NOT EXISTS `got_locations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -84,10 +67,6 @@ CREATE TABLE IF NOT EXISTS `got_locations` (
   `continent` enum('Westeros','Essos','Sothoryos') NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
-INSERT INTO `got_locations` (`name`, `region`, `continent`) VALUES
-('Winterfell', 'The North', 'Westeros');
-
 
 ALTER TABLE `got_characters`
   ADD CONSTRAINT `got_characters_ibfk_1` FOREIGN KEY (`origin`) REFERENCES `got_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -104,6 +83,32 @@ ALTER TABLE `got_house`
   ADD CONSTRAINT `got_house_ibfk_1` FOREIGN KEY (`head`) REFERENCES `got_characters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
+
+INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
+('Jon', 'Snow', 
+ (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'), 
+ 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
+ 
+('Eddard', 'Stark', 
+ (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'), 
+ 'Ice', 'human', 'dead', NULL),
+ 
+('Hodor', NULL, NULL, NULL, NULL, 'human', 'dead', NULL),
+
+('Arya', 'Stark', (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'),
+ 'Valyrian steel dagger', 'human', 'alive', NULL);
+ 
+ INSERT INTO `got_events_characters` (`event_id`, `character_id`) VALUES
+((select id from `got_events` where name = 'Battle of the Bastards'),((select id from got_characters where fname = 'Jon'));
+
+INSERT INTO `got_house` (`name`, `status`, `head`) VALUES
+('Stark', 'Great House', 0);
+
+INSERT INTO `got_locations` (`name`, `region`, `continent`) VALUES
+('Winterfell', 'The North', 'Westeros');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
