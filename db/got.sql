@@ -10,7 +10,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `got_characters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fname` varchar(30) DEFAULT NOT NULL,
+  `fname` varchar(30) NOT NULL,
   `lname` varchar(30) DEFAULT NULL,
   `house_id` int(11) DEFAULT NULL,
   `origin` int(11) DEFAULT NULL,
@@ -22,8 +22,6 @@ CREATE TABLE IF NOT EXISTS `got_characters` (
   KEY `origin` (`origin`),
   KEY `got_characters_ibfk_2` (`house_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
-
-
 
  
 CREATE TABLE IF NOT EXISTS `got_events` (
@@ -37,8 +35,6 @@ CREATE TABLE IF NOT EXISTS `got_events` (
   KEY `location` (`location`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_events` (`name`, `location`, `episode`, `season`, `summary`) VALUES
-('Battle of the Bastards', 1, 9, 6, 'The Battle of the Bastards is a battle late in the War of the Five Kings in which Jon Snow and Sansa Stark retake Winterfell from Lord Ramsay Bolton, the Warden of the North, and restore House Stark as the ruling house of the North.');
 
 CREATE TABLE IF NOT EXISTS `got_events_characters` (
   `event_id` int(11) DEFAULT NULL,
@@ -68,22 +64,15 @@ CREATE TABLE IF NOT EXISTS `got_locations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-ALTER TABLE `got_characters`
-  ADD CONSTRAINT `got_characters_ibfk_1` FOREIGN KEY (`origin`) REFERENCES `got_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `got_characters_ibfk_2` FOREIGN KEY (`house_id`) REFERENCES `got_house` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `got_events`
-  ADD CONSTRAINT `got_events_ibfk_1` FOREIGN KEY (`location`) REFERENCES `got_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `got_events_characters`
-  ADD CONSTRAINT `got_events_characters_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `got_events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `got_events_characters_ibfk_2` FOREIGN KEY (`character_id`) REFERENCES `got_characters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `got_house`
-  ADD CONSTRAINT `got_house_ibfk_1` FOREIGN KEY (`head`) REFERENCES `got_characters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 
 
+-- Winterfell
+INSERT INTO `got_locations` (`name`, `region`, `continent`) VALUES
+('Winterfell', 'The North', 'Westeros');
+-- house stark
+INSERT INTO `got_house` (`name`, `status`) VALUES ('Stark', 'Great House');
+
+-- characters Jon, Eddard, Hodor, Arya
 INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
 ('Jon', 'Snow', 
  (select id from got_house where name = 'Stark'), 
@@ -101,14 +90,31 @@ INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, 
  (select id from got_locations where name = 'Winterfell'),
  'Valyrian steel dagger', 'human', 'alive', NULL);
  
+ -- battle of the bastards
+INSERT INTO `got_events` (`name`, `location`, `episode`, `season`, `summary`) VALUES
+('Battle of the Bastards', (select id from got_locations where name = 'Winterfell'), 9, 6, 'The Battle of the Bastards is a battle late in the War of the Five Kings in which Jon Snow and Sansa Stark retake Winterfell from Lord Ramsay Bolton, the Warden of the North, and restore House Stark as the ruling house of the North.');
+
  INSERT INTO `got_events_characters` (`event_id`, `character_id`) VALUES
-((select id from `got_events` where name = 'Battle of the Bastards'),((select id from got_characters where fname = 'Jon'));
+((select id from `got_events` where name = 'Battle of the Bastards'),(select id from got_characters where fname = 'Jon'));
 
-INSERT INTO `got_house` (`name`, `status`, `head`) VALUES
-('Stark', 'Great House', 0);
+UPDATE `got_house` set head = (select id from `got_characters` where fname = 'Jon') where name = 'Stark';
 
-INSERT INTO `got_locations` (`name`, `region`, `continent`) VALUES
-('Winterfell', 'The North', 'Westeros');
+
+ALTER TABLE `got_characters`
+  ADD CONSTRAINT `got_characters_ibfk_1` FOREIGN KEY (`origin`) REFERENCES `got_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `got_characters_ibfk_2` FOREIGN KEY (`house_id`) REFERENCES `got_house` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `got_events`
+  ADD CONSTRAINT `got_events_ibfk_1` FOREIGN KEY (`location`) REFERENCES `got_locations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `got_events_characters`
+  ADD CONSTRAINT `got_events_characters_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `got_events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `got_events_characters_ibfk_2` FOREIGN KEY (`character_id`) REFERENCES `got_characters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `got_house`
+  ADD CONSTRAINT `got_house_ibfk_1` FOREIGN KEY (`head`) REFERENCES `got_characters` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
