@@ -24,11 +24,23 @@ CREATE TABLE IF NOT EXISTS `got_characters` (
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 INSERT INTO `got_characters` (`fname`, `lname`, `house_id`, `origin`, `weapon`, `species`, `status`, `organization`) VALUES
-('Jon', 'Snow', 1, 1, 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
-('Eddard', 'Stark', 1, 1, 'Ice', 'human', 'dead', NULL),
+('Jon', 'Snow', 
+ (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'), 
+ 'Longclaw', 'human', 'alive', 'Night\'s Watch'),
+ 
+('Eddard', 'Stark', 
+ (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'), 
+ 'Ice', 'human', 'dead', NULL),
+ 
 ('Hodor', NULL, NULL, NULL, NULL, 'human', 'dead', NULL),
-('Arya', 'Stark', 1, 1, 'Valyrian steel dagger', 'human', 'alive', NULL);
 
+('Arya', 'Stark', (select id from got_house where name = 'Stark'), 
+ (select id from got_locations where name = 'Winterfell'),
+ 'Valyrian steel dagger', 'human', 'alive', NULL);
+
+ 
 CREATE TABLE IF NOT EXISTS `got_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
@@ -40,8 +52,8 @@ CREATE TABLE IF NOT EXISTS `got_events` (
   KEY `location` (`location`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_events` (`id`, `name`, `location`, `episode`, `season`, `summary`) VALUES
-(1, 'Battle of the Bastards', 1, 9, 6, 'The Battle of the Bastards is a battle late in the War of the Five Kings in which Jon Snow and Sansa Stark retake Winterfell from Lord Ramsay Bolton, the Warden of the North, and restore House Stark as the ruling house of the North.');
+INSERT INTO `got_events` (`name`, `location`, `episode`, `season`, `summary`) VALUES
+('Battle of the Bastards', 1, 9, 6, 'The Battle of the Bastards is a battle late in the War of the Five Kings in which Jon Snow and Sansa Stark retake Winterfell from Lord Ramsay Bolton, the Warden of the North, and restore House Stark as the ruling house of the North.');
 
 CREATE TABLE IF NOT EXISTS `got_events_characters` (
   `event_id` int(11) DEFAULT NULL,
@@ -51,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `got_events_characters` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `got_events_characters` (`event_id`, `character_id`) VALUES
-(1, 0);
+((select id from `got_events` where name = 'Battle of the Bastards'),((select id from got_characters where fname = 'Jon'));
 
 CREATE TABLE IF NOT EXISTS `got_house` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -62,8 +74,8 @@ CREATE TABLE IF NOT EXISTS `got_house` (
   KEY `current_head` (`head`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_house` (`id`, `name`, `status`, `head`) VALUES
-(1, 'Stark', 'Great House', 0);
+INSERT INTO `got_house` (`name`, `status`, `head`) VALUES
+('Stark', 'Great House', 0);
 
 CREATE TABLE IF NOT EXISTS `got_locations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -73,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `got_locations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-INSERT INTO `got_locations` (`id`, `name`, `region`, `continent`) VALUES
-(1, 'Winterfell', 'The North', 'Westeros');
+INSERT INTO `got_locations` (`name`, `region`, `continent`) VALUES
+('Winterfell', 'The North', 'Westeros');
 
 
 ALTER TABLE `got_characters`
