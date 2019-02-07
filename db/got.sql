@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `got_characters` (
   `house_id` int(11) DEFAULT NULL,
   `origin` int(11) DEFAULT NULL,
   `weapon` varchar(30) DEFAULT NULL,
-  `species` enum('human','White Walker','Giant','Children of the Forest') NOT NULL DEFAULT 'human',
+  `species` enum('human','White Walker','Giant','Children of the Forest', 'Warlock', 'Dragon') NOT NULL DEFAULT 'human',
   `status` enum('alive','dead','Wight') NOT NULL DEFAULT 'alive',
   `organization` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`),
