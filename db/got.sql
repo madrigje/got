@@ -10,7 +10,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `got_characters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fname` varchar(30) DEFAULT NULL,
+  `fname` varchar(30) DEFAULT NOT NULL,
   `lname` varchar(30) DEFAULT NULL,
   `house_id` int(11) DEFAULT NULL,
   `origin` int(11) DEFAULT NULL,
