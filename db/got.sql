@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `got_events_characters` (
 CREATE TABLE IF NOT EXISTS `got_house` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
+  `sigil` varchar(90),
   `status` enum('Great House','Extinct','Vassal') NOT NULL,
   `head` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
